@@ -1,37 +1,52 @@
+import time
 
-# 1 以上 N 以下の整数が素数かどうかを返す
-def Eratosthenes(N):
-    # テーブル
-    isprime = [True] * (N+1)
 
-    # 0, 1 は予めふるい落としておく
-    isprime[0], isprime[1] = False, False
+def prime_sieve(n):
+    """returns a sieve of primes >= 5 and < n"""
+    flag = n % 6 == 2
+    sieve = bytearray((n // 3 + flag >> 3) + 1)
+    for i in range(1, int(n**0.5) // 3 + 1):
+        if not (sieve[i >> 3] >> (i & 7)) & 1:
+            k = (3 * i + 1) | 1
+            for j in range(k * k // 3, n // 3 + flag, 2 * k):
+                sieve[j >> 3] |= 1 << (j & 7)
+            for j in range(k * (k - 2 * (i & 1) + 4) // 3, n // 3 + flag, 2 * k):
+                sieve[j >> 3] |= 1 << (j & 7)
+    return sieve
 
-    # ふるい
-    for p in range(2, N+1):
-        # すでに合成数であるものはスキップする
-        if not isprime[p]:
-            continue
 
-        # p 以外の p の倍数から素数ラベルを剥奪
-        q = p * 2
-        while q <= N:
-            isprime[q] = False
-            q += p
+def prime_list(n):
+    """returns a list of primes <= n"""
+    res = []
+    if n > 1:
+        res.append(2)
+    if n > 2:
+        res.append(3)
+    if n > 4:
+        sieve = prime_sieve(n + 1)
+        res.extend(
+            3 * i + 1 | 1
+            for i in range(1, (n + 1) // 3 + (n % 6 == 1))
+            if not (sieve[i >> 3] >> (i & 7)) & 1
+        )
+    return res
 
-    # 1 以上 N 以下の整数が素数かどうか
-    return isprime
 
-# 入力
+import math
+
 N = int(input())
+prime = prime_list(int(math.sqrt(N)))
 
-# エラトステネスの篩
-isprime = Eratosthenes(N)
-
-lis=[]
-for idx,x in enumerate(isprime):
-    if x:
-        lis.append(idx)
-
-# 答え
-print(sorted(lis)[-10:-1])
+ans = 0
+for a in range(len(prime)):
+    for b in range(a + 1, len(prime)):
+        tmp = prime[a] * prime[a] * prime[b]
+        if tmp > 10**12/12:
+            break
+        for c in range(b + 1, len(prime)):
+            if tmp * prime[c] * prime[c] > N:
+                break
+            else:
+                ans += 1
+                # print(prime[a], prime[b], prime[c])
+print(ans)

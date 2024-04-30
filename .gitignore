@@ -1,5 +1,1 @@
-# macOS files
-.DS_Store
-
-# ライブラリー
-library
+venv/

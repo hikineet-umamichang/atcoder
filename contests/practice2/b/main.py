@@ -13,4 +13,4 @@ for i in range(q):
         bit.add(p, x)
     else:
         l, r = query[1], query[2]
-        bit.sum(l, r)
+        print(bit.sum(l, r))

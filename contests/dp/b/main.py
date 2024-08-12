@@ -1,12 +1,9 @@
-n,k=map(int,input().split())
-h=list(map(int,input().split()))
+n, k = map(int, input().split())
+h = list(map(int, input().split()))
 
-dp=[float("inf")]*(n)
-dp[0]=0
-
-for i in range(n+1):
-    for j in range(k+1):
-        if i+j<n:
-            dp[i+j]=min(dp[i+j],dp[i]+abs(h[i]-h[i+j]))
-            #print(dp)
-print(dp[n-1])
+dp = [10**10] * n
+dp[0] = 0
+for i in range(n):
+    for j in range(i + 1, min(i + k + 1, n)):
+        dp[j] = min(dp[j], dp[i] + abs(h[i] - h[j]))
+print(dp[-1])

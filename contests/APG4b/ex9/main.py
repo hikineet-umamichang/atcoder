@@ -1,0 +1,5 @@
+x, a, b = map(int, input().split())
+print(tmp := x + 1)
+print(tmp := tmp * (a + b))
+print(tmp := tmp**2)
+print(tmp := tmp - 1)
